@@ -1,0 +1,7 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=1273
+
+[ Note, as of May 2005,  this is included in Vim7 ]
+
+This file greatly extends the old Mathematica syntax highlighting that has traditionally come with vim.  It has substantial support for Mathematica patterns, operators, and includes comments notation goodies, such as special function comments beginning with (**.  Try it out and let me know what you think.
+
+Add autoindenting vimscript #1274, salt and pepper to taste.
