@@ -45,14 +45,14 @@ endif
 " Group Definitions:
 syntax cluster mmaNotes contains=mmaTodo,mmaFixme
 syntax cluster mmaComments contains=mmaComment,mmaFunctionComment,mmaItem,mmaFunctionTitle,mmaCommentStar
-syntax cluster mmaStrings contains=mmaString,mmaUnicode
+syntax cluster mmaStrings contains=mmaLooseQuote,mmaCommentString,mmaUnicode
 syntax cluster mmaTop contains=mmaOperator,mmaGenericFunction,mmaPureFunction,mmaVariable
 
 
 " Comment Keywords:
 syntax keyword mmaTodo TODO NOTE HEY contained
 syntax match mmaTodo "X\{3,}" contained
-syntax keyword mmaFixme FIX[ME] BROKEN contained
+syntax keyword mmaFixme FIX[ME] FIXTHIS BROKEN contained
 " yay pirates...
 syntax match mmaFixme "\%(Y\=A\+R\+G\+\|GRR\+\|CR\+A\+P\+\)\%(!\+\)\=" contained
 syntax match mmaemPHAsis "\(_\+\)\%(\1\@!.\)\+\1" contained
@@ -60,12 +60,13 @@ syntax match mmaemPHAsis "\(_\+\)\%(\1\@!.\)\+\1" contained
 " Comment Sections:
 "   this:
 "   :that:
-"   TODO - make this more selective.  Perhaps like vim.vim
-syntax match mmaItem "\%(^[( |*\t]*\)\@<=\%(:\+\|\w\).\{-}:\+" contained contains=@mmaNotes,@mmaStrings
+syntax match mmaItem "\%(^[( |*\t]*\)\@<=\%(:\+\|\a\)[a-zA-Z0-9 ]\+:" contained contains=@mmaNotes
 
 " Actual Mathematica Comments:
 "   (* *)
-syntax region mmaComment start=+(\*+ end=+\*)+ skipempty contains=@mmaNotes,mmaItem,@mmaStrings,mmaemPHAsis,mmaComment
+"   allow nesting (* (* *) *) even though the frontend
+"   won't always like it.
+syntax region mmaComment start=+(\*+ end=+\*)+ skipempty contains=@mmaNotes,mmaItem,@mmaStrings,mmaemPHAsis,mmaComment,mmaCommentString
 
 " Function Comments:
 "   just like a normal comment except the first sentance is Special ala Java
@@ -93,13 +94,40 @@ syntax match mmaNumber "`\d\+\>"
 "   it's probably smarter to define a select few, and get the rest from
 "   context if absolutely necessary.
 "   TODO - populate this with other often used Symbols
-syntax keyword mmaVariable True False None Automatic All Infinity Null Pi
 
+" standard fixed symbols:
+syntax keyword mmaVariable True False None Automatic All Null C General
+
+" mathematical constants:
+syntax keyword mmaVariable Pi I E Infinity ComplexInfinity Indeterminate GoldenRatio EulerGamma Degree Catalan Khinchin Glaisher 
+
+" stream data / atomic heads:
+syntax keyword mmaVariable Byte Character Expression Number Real String Word EndOfFile Integer Symbol
+
+" sets:
+syntax keyword mmaVariable Integers Complexes Reals Booleans Rationals
+
+" character classes:
+syntax keyword mmaPattern DigitCharacter LetterCharacter WhitespaceCharacter WordCharacter EndOfString StartOfString EndOfLine StartOfLine WordBoundary
+
+" SelectionMove directions/units:
+syntax keyword mmaVariable Next Previous After Before Character Word Expression TextLine CellContents Cell CellGroup EvaluationCell ButtonCell GeneratedCell Notebook
+syntax keyword mmaVariable CellTags CellStyle CellLabel
+
+" TableForm positions:
+syntax keyword mmaVariable Above Below Left Right
+
+" colors:
+syntax keyword mmaVariable Black Blue Brown Cyan Gray Green Magenta Orange Pink Purple Red White Yellow
+
+" function attributes
+syntax keyword mmaVariable Protected Listable OneIdentity Orderless Flat Constant NumericFunction Locked ReadProtected HoldFirst HoldRest HoldAll HoldAllComplete SequenceHold NHoldFirst NHoldRest NHoldAll Temporary Stub 
 
 " Strings:
 "   "string"
 "   'string' is not accepted (until literal strings are supported!)
-syntax region mmaString start=+"+ skip=+\\\@<!\\\%(\\\\\)*"+ end=+"+
+syntax region mmaString start=+\\\@<!"+ skip=+\\\@<!\\\%(\\\\\)*"+ end=+"+
+syntax region mmaCommentString oneline start=+\\\@<!"+ skip=+\\\@<!\\\%(\\\\\)*"+ end=+"+ contained
 
 " Patterns:
 "   Each pattern marker below can be Blank[] (_), BlankSequence[] (__)
@@ -213,11 +241,13 @@ if version >= 508 || !exists("did_mma_syn_inits")
     HiLink mmaComment           Comment
     HiLink mmaCommentStar       Comment
     HiLink mmaFunctionComment   Comment
+    HiLink mmaLooseQuote        Comment
 	HiLink mmaOperator          Operator
     HiLink mmaPatternOp         Operator
 	HiLink mmaPureFunction      Operator
 	HiLink mmaVariable          Identifier
 	HiLink mmaString            String
+    HiLink mmaCommentString     String
 	HiLink mmaUnicode           String
 	HiLink mmaMessage           Type
 	HiLink mmaPattern           Type
