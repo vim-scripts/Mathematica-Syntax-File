@@ -55,7 +55,7 @@ syntax match mmaTodo "X\{3,}" contained
 syntax keyword mmaFixme FIX[ME] FIXTHIS BROKEN contained
 " yay pirates...
 syntax match mmaFixme "\%(Y\=A\+R\+G\+\|GRR\+\|CR\+A\+P\+\)\%(!\+\)\=" contained
-syntax match mmaemPHAsis "\(_\+\)\%(\1\@!.\)\+\1" contained
+syntax match mmaemPHAsis "\(_\+\)[ a-zA-Z0-9]\+\1" contained
 
 " Comment Sections:
 "   this:
@@ -72,7 +72,7 @@ syntax region mmaComment start=+(\*+ end=+\*)+ skipempty contains=@mmaNotes,mmaI
 "   just like a normal comment except the first sentance is Special ala Java
 "    (** **)
 syntax region mmaFunctionComment start="(\*\*\+" end="\*\+)" contains=@mmaNotes,mmaItem,mmaFunctionTitle,@mmaStrings,mmaemPHAsis,mmaComment
-syntax region mmaFunctionTitle contained matchgroup=mmaFunctionComment start="\%((\*\*[ *]*\)" matchgroup=mmaFunctionTitle keepend end="\w[.!-]\=\s*$" end="[.!-][ \t\r<&]"me=e-1 end="\%(\*\+)\)\@=" contained contains=@mmaNotes,mmaItem,mmaCommentStar
+syntax region mmaFunctionTitle contained matchgroup=mmaFunctionComment start="\%((\*\*[ *]*\)" matchgroup=mmaFunctionTitle keepend end=".[.!-]\=\s*$" end="[.!-][ \t\r<&]"me=e-1 end="\%(\*\+)\)\@=" contained contains=@mmaNotes,mmaItem,mmaCommentStar
 
 " catch remaining (**********)'s
 syntax match mmaComment "(\*\*\+)"
@@ -210,8 +210,8 @@ syntax match mmaUnicode "\\\[\w\+\d*\]"
 syntax match mmaUnicode "\\\%(\x\{3}\|\.\x\{2}\|:\x\{4}\)"
 
 " Syntax Errors:
-syntax match mmaError "\*)" containedin=ALLBUT,@mmaComments,@mmaStrings
-syntax match mmaError "\%([&:|+*/?-]\{3,}\|[.=]\{4,}\|_\@<=\.\{2,}\|`\{2,}\)" containedin=ALLBUT,@mmaComments,@mmaStrings
+syntax match mmaError "\*)" containedin=ALLBUT,@mmaComments,@mmaStrings,mmaString
+syntax match mmaError "\%([&:|+*/?-]\{3,}\|[.=]\{4,}\|_\@<=\.\{2,}\|`\{2,}\)" containedin=ALLBUT,@mmaComments,@mmaStrings,mmaString
 
 
 " Punctuation:
