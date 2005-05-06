@@ -197,7 +197,7 @@ syntax match mmaPureFunction "&"
 " Since everything is pretty much a function, get this straight 
 " from context
 
-syntax match mmaGenericFunction "[A-Za-z0-9`]\+\s*\%([@[]\|/:\)\@=" contains=mmaOperator
+syntax match mmaGenericFunction "[A-Za-z0-9`]\+\s*\%([@[]\|/:\|/\=/@\)\@=" contains=mmaOperator
 syntax match mmaGenericFunction "\~\s*[^~]\+\s*\~"hs=s+1,he=e-1 contains=mmaOperator,mmaBoring
 syntax match mmaGenericFunction "//\s*[A-Za-z0-9`]\+"hs=s+2 contains=mmaOperator
    
